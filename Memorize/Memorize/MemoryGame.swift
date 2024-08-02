@@ -5,28 +5,28 @@
 //  Created by Rice on 2024/8/1.
 //
 //  Model
-import Foundation
 
+import Foundation
 
 // where cardContent: Equatable
 struct MemoryGame<CardContent> {
     
     struct Card: Identifiable {
-        var id: Int
-        var isFaceUp: Bool = false
-        var isMatched: Bool = false
-        var content:String
+        // never change after create
+        let id: Int
+        let content:String
+        
+        // can be changed
+        var isFaceUp = false
+        var isMatched = false
+        
     }
-    
-    // optional, if no set, =nil
+    private(set) var cards: Array<Card>
+
     private var indexOfFaceUpCard: Int?
     
-    private(set) var cards: Array<Card>
-    
-    
-    
     init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
-        cards = Array<Card>()
+        cards = []
         for pairIndex in 0..<numberOfPairsOfCards {
             let content = createCardContent(pairIndex)
             cards.append(Card(id: pairIndex*2, content: content as! String))
@@ -36,20 +36,23 @@ struct MemoryGame<CardContent> {
     
     mutating func choose(_ card: Card) {
         let chosenIndex = card.id
-        print("choose ",chosenIndex)
-        // MARK: why can't find card in cards
-        if indexOfFaceUpCard == nil { 
-            indexOfFaceUpCard = chosenIndex
-        }
-        else if cards[chosenIndex].content == cards[indexOfFaceUpCard!].content && chosenIndex != indexOfFaceUpCard {
-            cards[chosenIndex].isMatched = true
-            cards[indexOfFaceUpCard!].isMatched = true
-            print("match")
+        cards[chosenIndex].isFaceUp.toggle()
+        print("choose ",cards[chosenIndex])
+      
+        // safe optional
+        if let potentialMatchIndex = indexOfFaceUpCard {
+            if cards[chosenIndex].content == cards[potentialMatchIndex].content && chosenIndex != potentialMatchIndex {
+                cards[chosenIndex].isMatched = true
+                cards[potentialMatchIndex].isMatched = true
+                print("\nmatch\n")
+            }
         }
         for index in cards.indices {
             cards[index].isFaceUp = false
         }
-        cards[chosenIndex].isFaceUp.toggle()
+        cards[chosenIndex].isFaceUp = true
         indexOfFaceUpCard = chosenIndex
+        print("indexOfFaceUpCard", indexOfFaceUpCard ?? -1)
+
     }
 }
