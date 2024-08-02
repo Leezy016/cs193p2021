@@ -7,9 +7,6 @@
 
 import SwiftUI
 
-
-var wordsCnt = 28
-
 struct EmojiMemoryGameView: View {
     @ObservedObject var game: EmojiMemoryGame
     
