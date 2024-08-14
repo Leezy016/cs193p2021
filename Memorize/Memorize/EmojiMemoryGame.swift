@@ -13,7 +13,7 @@ class EmojiMemoryGame: ObservableObject {
     
     private static let words = ["🐼","☎️","🍙","✈️","🫂","⏰","🎮","🍔","🏖️"]
     
-    @Published private var model = MemoryGame(numberOfPairsOfCards: words.count){ pairIndex in words[pairIndex]}
+    @Published private var model = MemoryGame(numberOfPairsOfCards: 6){ pairIndex in words[pairIndex]}
     
     var cards: Array<MemoryGame<String>.Card> { model.cards }
     
